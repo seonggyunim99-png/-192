@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f111a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>일본어 시험 총정리</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg">
+<link rel="apple-touch-icon" href="icon.svg">
+<style>
+:root{--bg:#0f111a;--card:#1a1d2d;--line:#2d3142;--pri:#6c5ce7;--tx:#fff;--sub:#a0a5b5;--ok:#00b894;--err:#ff7675}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:Pretendard,-apple-system,"Noto Sans KR","Noto Sans JP",sans-serif;text-align:center;padding:env(safe-area-inset-top) 0 calc(40px + env(safe-area-inset-bottom))}
+header{padding:14px;background:var(--card);border-bottom:1px solid var(--line);margin-bottom:12px}
+h1{margin:0;font-size:19px;color:var(--pri)}
+.prog{font-size:12px;color:var(--sub);margin-top:4px}
+.menu{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;padding:0 8px;margin-bottom:14px}
+button{font-family:inherit;color:var(--tx);cursor:pointer}
+button:focus-visible{outline:2px solid var(--pri);outline-offset:2px}
+.mb{background:var(--card);border:2px solid var(--line);padding:7px 12px;border-radius:10px;font-size:13px;font-weight:700}
+.mb.on{border-color:var(--pri);background:rgba(108,92,231,.18)}
+.sec{display:none;padding:0 14px}.sec.on{display:block}
+.row{display:flex;gap:8px;justify-content:center;margin:0 auto 12px}
+.chip{background:#2d3142;border:1px solid #3d425a;color:var(--sub);padding:5px 12px;border-radius:8px;font-size:12px}
+.chip.on{background:var(--pri);color:#fff;border-color:var(--pri)}
+.fc{background:var(--card);border-radius:20px;padding:30px 18px;width:100%;max-width:340px;min-height:200px;margin:0 auto 14px;cursor:pointer;user-select:none;box-shadow:0 8px 16px rgba(0,0,0,.3);display:flex;flex-direction:column;justify-content:center;align-items:center}
+.idx{font-size:13px;color:var(--pri);font-weight:700;margin-bottom:6px}
+.ko{font-size:25px;font-weight:700;margin-bottom:8px}
+.ans{display:none}.fc.flip .ans{display:block}.fc.flip .hint{display:none}
+.jp{font-size:32px;color:var(--pri);font-weight:700}
+.ro{font-size:16px;color:var(--sub);margin-top:4px}
+.hint{font-size:12px;color:#888;margin-top:10px}
+.btn{flex:1;background:var(--pri);border:0;padding:13px;border-radius:12px;font-size:15px;font-weight:700;max-width:170px}
+.btn.g{background:var(--line)}
+.know{background:transparent;border:1.5px solid var(--ok);color:var(--ok);padding:8px 14px;border-radius:10px;font-size:13px;font-weight:700;margin-bottom:12px}
+.know.on{background:var(--ok);color:#06241d}
+.say{background:none;border:0;font-size:20px;padding:4px 8px}
+.quiz{background:var(--card);max-width:400px;margin:0 auto;border-radius:20px;padding:20px 16px}
+.slots{display:flex;justify-content:center;gap:8px;margin:14px 0;min-height:52px}
+.slot{width:46px;height:52px;border-bottom:3px solid var(--line);font-size:26px;font-weight:700;color:var(--pri);display:flex;align-items:center;justify-content:center}
+.slot.f{border-color:var(--pri);background:rgba(108,92,231,.1);border-radius:8px 8px 0 0;cursor:pointer}
+.slot.bad{border-color:var(--err);color:var(--err)}.slot.good{border-color:var(--ok);color:var(--ok)}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.ch{background:var(--line);border:0;border-radius:10px;font-size:21px;padding:11px 0}
+.ch:disabled{opacity:0;visibility:hidden}
+.sub{background:none;border:1.5px solid #555;color:var(--sub);padding:8px 12px;border-radius:8px;font-size:13px}
+.fb{margin-top:10px;font-size:15px;font-weight:700;min-height:20px}
+.list{display:flex;flex-direction:column;gap:10px;max-width:450px;margin:0 auto;text-align:left}
+.it{background:var(--card);padding:12px 16px;border-radius:12px;border-left:4px solid var(--pri)}
+.it .top{display:flex;justify-content:space-between;align-items:center}
+.it .j{font-size:18px;font-weight:700;color:var(--pri)}.it .r{font-size:12px;color:var(--sub);margin-top:2px}
+.search{width:100%;max-width:400px;padding:13px;font-size:15px;border-radius:12px;border:2px solid var(--line);background:var(--card);color:var(--tx);margin-bottom:14px;outline:none}
+.search:focus{border-color:var(--pri)}
+.info{background:var(--card);border-radius:16px;padding:18px;max-width:460px;margin:0 auto 14px;text-align:left;line-height:1.6}
+.info h3{margin:0 0 8px;color:var(--pri);border-bottom:1px solid var(--line);padding-bottom:8px;font-size:16px}
+.info p{margin:8px 0;font-size:14px;color:#ddd}.info ul{margin:8px 0;padding-left:18px;color:#ccc}.info li{margin-bottom:7px;font-size:14px}
+.tbl{width:100%;max-width:480px;margin:0 auto;border-collapse:collapse;background:var(--card)}
+.tbl th,.tbl td{padding:8px;border:1px solid var(--line);text-align:center;font-size:13px}
+.tbl th{background:#24283b;color:var(--pri)}
+.tbl td b{font-size:19px;display:block}.tbl td i{font-style:normal;font-size:12px;color:var(--sub)}
+.tbl td[data-k]{cursor:pointer}
+.empty{color:var(--sub);padding:30px 0}
+.top-bar{display:flex;justify-content:space-between;align-items:center;max-width:450px;margin:0 auto 12px;font-size:14px;color:var(--sub);font-weight:700}
+.clr{background:none;border:1.5px solid var(--err);color:var(--err);padding:6px 12px;border-radius:8px;font-size:12px;font-weight:700}
+.opt{display:block;width:100%;background:var(--line);border:2px solid transparent;border-radius:12px;padding:13px;font-size:17px;margin-bottom:8px}.opt.good{border-color:var(--ok)}.opt.bad{border-color:var(--err)}mark{background:rgba(108,92,231,.4);color:#fff;border-radius:4px;padding:0 2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header><h1>🇯🇵 일본어 시험 총정리</h1><div class="prog" id="prog"></div></header>
+<nav class="menu" id="menu"></nav>
+
+<section class="sec on" id="card">
+  <div class="row"><button class="chip on" data-m="seq">📋 순서대로</button><button class="chip" data-m="rnd">🔀 무작위</button><button class="chip" data-m="rev">🔁 복습</button></div>
+  <div class="fc" id="fc">
+    <div class="idx" id="fc-idx"></div><div class="ko" id="fc-ko"></div>
+    <div class="hint">터치해서 일본어 확인 👆</div>
+    <div class="ans"><div class="jp" id="fc-jp"></div><div class="ro" id="fc-ro"></div></div>
+  </div>
+  <div class="row"><button class="know" id="fc-know">✓ 외웠어요</button><button class="know" style="color:var(--pri);border-color:var(--pri)" id="fc-say">🔊 듣기</button></div>
+  <div class="row"><button class="btn g" id="prev">⬅️ 이전</button><button class="btn" id="next">다음 ➡️</button></div>
+</section>
+
+<section class="sec" id="quiz">
+  <div class="quiz">
+    <div class="row"><button class="chip on" data-q="seq">📋 순서대로</button><button class="chip" data-q="rnd">🔀 무작위</button><button class="chip" data-q="long">🔊 장음만</button><button class="chip" data-q="wrong">❌ 오답만</button></div>
+    <div class="idx" id="q-idx"></div><div class="ko" id="q-ko"></div>
+    <p style="font-size:12px;color:#888;margin:4px 0">글자를 탭해 조합하고, 윗칸 글자를 누르면 취소돼요</p>
+    <div class="slots" id="slots"></div><div class="grid" id="grid"></div>
+    <div class="row" style="margin:0"><button class="sub" id="q-prev">⬅️ 이전</button><button class="sub" id="q-reset">🔄 다시</button><button class="sub" id="q-hint">💡 힌트</button><button class="sub" id="q-skip">건너뛰기 ➡️</button></div>
+    <div class="fb" id="fb"></div>
+  </div>
+</section>
+
+<section class="sec" id="long">
+  <div class="info"><h3>🔊 장음 단어 모음</h3><p id="long-n"></p><p>색칠된 부분을 한 박 더 길게 읽어요.</p></div>
+  <div class="row"><button class="btn" id="long-quiz" style="max-width:260px">🧩 장음 단어로 퀴즈</button></div>
+  <div class="list" id="l-list"></div>
+</section>
+
+<section class="sec" id="mc">
+  <div class="quiz">
+    <div class="row"><button class="chip on" data-mc="ko">뜻 → 일본어</button><button class="chip" data-mc="ear">🔊 소리 → 뜻</button></div>
+    <div class="idx" id="mc-idx"></div><div class="ko" id="mc-q"></div>
+    <div id="mc-opts" style="margin-top:12px"></div><div class="fb" id="mc-fb"></div>
+  </div>
+</section>
+
+<section class="sec" id="wrong">
+  <div class="top-bar"><span id="w-count"></span><button class="clr" id="w-clear">전체 비우기</button></div>
+  <div class="list" id="w-list"></div>
+</section>
+
+<section class="sec" id="culture">
+  <div class="info"><h3>🗾 일본의 국토와 행정체계</h3><ul>
+    <li><b>도도부현 47개</b>: 1도(도쿄도) · 1도(홋카이도) · 2부(오사카부, 교토부) · 43현</li>
+    <li><b>주요 4대 섬</b>: 홋카이도, 혼슈, 시코쿠, 규슈</li>
+    <li><b>언어</b>: 히라가나, 가타카나, 한자를 혼용하며 한국어와 어순이 같음</li></ul></div>
+  <div class="info"><h3>👤 일본인의 이름 문화</h3><ul>
+    <li><b>순서</b>: 한국처럼 성(姓)이 앞, 이름(名)이 뒤</li>
+    <li><b>성씨</b>: 약 30만 개로 매우 다양함</li>
+    <li><b>유래</b>: 산, 강, 들판 등 자연과 관련된 한자(山田, 川口 등)가 많음</li></ul></div>
+  <div class="info"><h3>🏫 일본 고등학교</h3><ul>
+    <li><b>학기</b>: 3학기제 (4월 입학, 3월 졸업)</li>
+    <li><b>수업</b>: 주 5일, 1교시 50분</li>
+    <li><b>점심</b>: 주로 도시락</li>
+    <li><b>방과 후</b>: 많은 학생이 동아리(부카츠)에 참여</li></ul></div>
+</section>
+
+<section class="sec" id="dict">
+  <input class="search" id="search" placeholder="한국어, 일본어, 발음 검색..." aria-label="검색">
+  <div class="list" id="d-list"></div>
+</section>
+
+<section class="sec" id="rules">
+  <div class="info"><h3>촉음 っ</h3>
+    <p>작은 っ는 한 박의 길이를 가지며, 뒤 자음에 따라 받침 소리가 달라집니다.</p><ul>
+    <li><b>[k]</b> か행 앞: にっき, さっか</li>
+    <li><b>[t]</b> た행 앞: きって, ちょっと, おっと</li>
+    <li><b>[s]</b> さ행 앞: ざっし, けっせき</li>
+    <li><b>[p]</b> ぱ행 앞: きっぷ, いっぱい</li></ul></div>
+  <div class="info"><h3>발음 ん</h3>
+    <p>ん도 한 박의 길이를 가지며, 뒤 자음에 따라 소리가 달라집니다.</p><ul>
+    <li><b>[m] ㅁ</b> ま・ば・ぱ행 앞: さんぽ</li>
+    <li><b>[n] ㄴ</b> さ・ざ・た・だ・な・ら행 앞: せんせい, うんてん, かんじ</li>
+    <li><b>[ŋ] ㅇ</b> か・が행 앞: おんがく, ぶんか</li>
+    <li><b>[N] ㄴ과 ㅇ 사이</b> あ・は・わ・や행 앞, 단어 끝: にほん, ほん</li></ul></div>
+  <div class="info"><h3>요음 ゃ ゅ ょ</h3>
+    <p>い단 글자 + 작은 ゃゅょ는 한 박으로 읽어요. 예) しゃ(sha), ちゅう(chuu), りょこう(ryokou)</p></div>
+  <div class="info"><h3>장음</h3>
+    <p>모음을 한 박 더 길게 끌어 읽어요.</p><ul>
+    <li><b>あ단+あ</b>: おかあさん</li><li><b>い단+い</b>: おにいさん</li>
+    <li><b>う단+う</b>: くうこう, すうがく</li>
+    <li><b>え단+え/い</b>: おねえさん, せんせい</li>
+    <li><b>お단+お/う</b>: こおり, おとうさん</li>
+    <li><b>가타카나</b>: 장음 부호 ー 사용 (ゲーム)</li></ul></div>
+</section>
+
+<section class="sec" id="gojuon">
+  <p style="font-size:12px;color:var(--sub)">칸을 누르면 소리가 나요</p>
+  <table class="tbl" id="gt"></table>
+</section>
+
+<script>
+const D=`의자|いす|isu
+역|えき|eki
+우산|かさ|kasa
+수박|すいか|suika
+벚꽃|さくら|sakura
+배 (타는 배)|ふね|fune
+사람|ひと|hito
+꽃|はな|hana
+꿈|ゆめ|yume
+산|やま|yama
+밤|よる|yoru
+안경|めがね|megane
+물|みず|mizu
+번쩍번쩍 (반짝반짝)|ぴかぴか;ピカピカ|pikapika
+감|かき|kaki
+열쇠|かぎ|kagi
+뚜껑|ふた|futa
+차 (마시는 차)|おちゃ|ocha
+가수|かしゅ|kashu
+사전|じしょ|jisho
+의사|いしゃ|isha
+석공|いしや|ishiya
+십 (10)|じゅう|juu
+자유|じゆう|jiyuu
+느긋하게 (천천히)|ゆっくり|yukkuri
+결석|けっせき|kesseki
+잠깐 (조금)|ちょっと|chotto
+일기|にっき|nikki
+잡지|ざっし|zasshi
+우표|きって|kitte
+표|きっぷ|kippu
+엄청 많이 (가득)|いっぱい|ippai
+언덕|さか|saka
+작가|さっか|sakka
+소리|おと|oto
+남편|おっと|otto
+선배|せんぱい|senpai
+운전|うんてん|unten
+산책|さんぽ|sanpo
+온천|おんせん|onsen
+일본어|にほんご|nihongo
+가방|かばん|kaban
+화재|かじ|kaji
+한자|かんじ|kanji
+부하|ぶか|buka
+문화|ぶんか|bunka
+음악|おんがく|ongaku
+어머니|おかあさん|okaasan
+형 (오빠)|おにいさん|oniisan
+수학|すうがく|suugaku
+누나 (언니)|おねえさん|oneesan
+선생님|せんせい|sensei
+얼음|こおり|koori
+아빠 (아버지)|おとうさん|otousan
+할머니|おばあさん|obaasan
+공항|くうこう|kuukou
+시계|とけい|tokei
+스모|すもう|sumou
+여기|ここ|koko
+고등학교|こうこう|koukou
+아저씨|おじさん|ojisan
+할아버지|おじいさん|ojiisan
+안녕하세요 <아침>|おはようございます|ohayougozaimasu
+안녕 <아침>|おはよう|ohayou
+안녕하세요 <낮>|こんにちは|konnichiwa;konnichiha
+안녕하세요 <저녁>|こんばんは|konbanwa;konbanha
+안녕히 가세요|さようなら|sayounara
+안녕히 주무세요 (존댓말)|おやすみなさい|oyasuminasai
+안녕히 주무세요 (반말)|おやすみ|oyasumi
+그럼 안녕|じゃあね|jaane
+또 만나|またね|matane
+내일 또 봐|またあした|mataashita
+처음 뵙겠습니다|はじめまして|hajimemashite
+나 / 저 (격식)|わたし|watashi
+~은 / ~는|は|wa;ha
+~입니다|です|desu
+한국|かんこく|kankoku
+~에서 / ~부터|から|kara
+왔습니다|きました|kimashita
+부디 / 아무쪼록 (어서)|どうぞ|douzo
+잘|よろしく|yoroshiku
+부탁합니다|おねがいします|onegaishimasu
+일본|にほん|nihon
+도쿄|とうきょう|toukyou
+미국|アメリカ|amerika
+중국|ちゅうごく|chuugoku
+1 (일)|いち|ichi
+2 (이)|に|ni
+3 (삼)|さん|san
+4 (사)|よん;し|yon;shi
+5 (오)|ご|go
+6 (육)|ろく|roku
+7 (칠)|なな;しち|nana;shichi
+8 (팔)|はち|hachi
+9 (구)|きゅう;く|kyuu;ku
+0 (영)|ゼロ;れい|zero;rei
+몇 / 무엇|なん;なに|nan;nani
+~학년|ねんせい|nensei
+~까 (~입니까)|か|ka
+취미|しゅみ|shumi
+수영|すいえい|suiei
+여행|りょこう|ryokou
+야구|やきゅう|yakyuu
+게임|ゲーム|ge-mu;gemu
+돼지|ぶた|buta
+서울|ソウル|souru
+~의|の|no
+나, 저 (남성어/비격식)|ぼく|boku
+나 (비격식 남성어)|おれ|ore
+이쪽|こちら;こっち|kochira;kotchi
+~씨|さん|san
+피아노|ピアノ|piano
+여러분|みなさん|minasan
+요리|りょうり|ryouri
+우와 <감탄사>|うわー;わあ|uwaa;waa
+대단하다|すごい|sugoi
+앞으로|これから|korekara
+저야말로|こちらこそ|kochirakoso`;
+const W=D.trim().split('\n').map(l=>{const[a,b,c]=l.split('|');return{ko:a,jp:b.split(';'),ro:c.split(';')}});
+const $=id=>document.getElementById(id), N=W.length;
+const esc=s=>s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const rnd=n=>Math.floor(Math.random()*n);
+const store={get(k){try{return JSON.parse(localStorage.getItem(k)||'[]')}catch(e){return[]}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+let wrong=new Set(store.get('jp_wrong')), known=new Set(store.get('jp_known'));
+const key=i=>W[i].ko+'|'+W[i].jp[0];
+const idxOf=new Map(W.map((w,i)=>[key(i),i]));
+const LS=[['あかがさざただなはばぱまやゃらわ','あ'],['いきぎしじちぢにひびぴみり','い'],['うくぐすずつづぬふぶぷむゆゅる','う'],['えけげせぜてでねへべぺめれ','えい'],['おこごそぞとどのほぼぽもよょろを','おう']];
+const LSRC=LS.map(([r,v])=>`(?<=[${r}])[${v}]`).join('|')+'|ー';
+const LT=new RegExp(LSRC),LRE=new RegExp(LSRC,'g');
+const longIdx=W.map((_,i)=>i).filter(i=>W[i].jp.some(j=>LT.test(j)));
+const hl=s=>esc(s).replace(LRE,m=>`<mark>${m}</mark>`);
+function showLong(){$('long-n').textContent=`장음이 들어간 단어 ${longIdx.length}개`;$('l-list').innerHTML=longIdx.map(i=>itemHTML(i,'',true)).join('')}
+function revPick(){const a=[...wrong].map(k=>idxOf.get(k)),b=W.map((_,i)=>i).filter(i=>!known.has(key(i)));const p=a.length&&Math.random()<.6?a:b.length?b:W.map((_,i)=>i);return p[rnd(p.length)]}
+function streak(){let s={};try{s=JSON.parse(localStorage.getItem('jp_streak')||'{}')}catch(e){}const t=new Date().toDateString(),y=new Date(Date.now()-864e5).toDateString();if(s.d!==t){s={d:t,n:s.d===y?(s.n||0)+1:1};try{localStorage.setItem('jp_streak',JSON.stringify(s))}catch(e){}}return s.n||1}
+const STREAK=streak();
+let mm='ko',mi=0,mlock=false;
+function newMC(){
+  mlock=false;mi=rnd(N);const w=W[mi],ids=new Set([mi]);
+  while(ids.size<4)ids.add(rnd(N));
+  const o=[...ids].sort(()=>Math.random()-.5);
+  $('mc-idx').textContent=mm==='ko'?'뜻에 맞는 일본어는?':'듣고 뜻을 고르세요';
+  $('mc-q').innerHTML=mm==='ko'?esc(w.ko):'<button class="say" style="font-size:34px" data-say="'+mi+'">🔊</button>';
+  $('mc-opts').innerHTML=o.map(i=>`<button class="opt" data-o="${i}">${esc(mm==='ko'?W[i].jp[0]:W[i].ko)}</button>`).join('');
+  $('mc-fb').textContent='';if(mm==='ear')say(w.jp[0]);
+}
+function pickMC(t){
+  if(mlock)return;mlock=true;const a=W[mi].jp[0],ok=W[+t.dataset.o].jp[0]===a;
+  document.querySelectorAll('.opt').forEach(b=>{if(W[+b.dataset.o].jp[0]===a)b.classList.add('good')});
+  if(!ok){t.classList.add('bad');wrong.add(key(mi));save()}
+  $('mc-fb').style.color=ok?'var(--ok)':'var(--err)';
+  $('mc-fb').textContent=ok?'정답! 🎉':`정답: ${a} (${W[mi].ko}) · 오답 노트에 추가`;
+  say(a);setTimeout(newMC,ok?1000:2200);
+}
+wrong=new Set([...wrong].filter(k=>idxOf.has(k)));known=new Set([...known].filter(k=>idxOf.has(k)));
+const save=()=>{store.set('jp_wrong',[...wrong]);store.set('jp_known',[...known]);progress()};
+function progress(){$('prog').textContent=`🔥 ${STREAK}일 연속 · 외운 단어 ${known.size} / ${N} · 오답 ${wrong.size}개`}
+function say(t){if(!('speechSynthesis' in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='ja-JP';u.rate=.75;speechSynthesis.speak(u)}
+
+/* tabs */
+const tabs=[['card','📋 단어장'],['long','🔊 장음'],['mc','🎯 객관식'],['quiz','🧩 철자 조합'],['wrong','❌ 오답 노트'],['culture','🗾 일본 상식'],['dict','📖 사전'],['rules','🗣️ 발음 규칙'],['gojuon','📊 오십음도']];
+$('menu').innerHTML=tabs.map(t=>`<button class="mb" data-t="${t[0]}">${t[1]}</button>`).join('');
+function tab(id){
+  document.querySelectorAll('.mb').forEach(b=>b.classList.toggle('on',b.dataset.t===id));
+  document.querySelectorAll('.sec').forEach(s=>s.classList.toggle('on',s.id===id));
+  if(id==='card')showCard();if(id==='quiz')newQuiz();if(id==='wrong')showWrong();if(id==='dict')showDict();if(id==='long')showLong();if(id==='mc')newMC();
+}
+
+/* flashcards */
+let cm='seq',ci=0;
+function showCard(){
+  const w=W[ci];$('fc').classList.remove('flip');
+  $('fc-idx').textContent=cm==='seq'?`${ci+1} / ${N}`:cm==='rev'?'🔁 복습 (오답·미암기 우선)':'🎲 무작위';
+  $('fc-ko').textContent=w.ko;$('fc-jp').textContent=w.jp.join(' / ');$('fc-ro').textContent=w.ro.join(' / ');
+  const k=known.has(key(ci));$('fc-know').classList.toggle('on',k);$('fc-know').textContent=k?'✓ 외움':'✓ 외웠어요';
+}
+function step(d){ci=cm==='rnd'?rnd(N):cm==='rev'?revPick():(ci+d+N)%N;showCard()}
+
+/* quiz */
+let qm='seq',qi=0,target=[],input=[],pool=[...new Set(W.flatMap(w=>w.jp.flatMap(j=>[...j])))],locked=false;
+function pickQuiz(){
+  if(qm==='rnd')qi=rnd(N);
+  if(qm==='long')qi=longIdx[rnd(longIdx.length)];
+  if(qm==='wrong'){const l=[...wrong].map(k=>idxOf.get(k));if(!l.length)return false;qi=l[rnd(l.length)]}
+  return true;
+}
+function newQuiz(){
+  locked=false;
+  if(!pickQuiz()){$('q-ko').textContent='오답이 없어요 👏';$('q-idx').textContent='';$('slots').innerHTML='';$('grid').innerHTML='';$('fb').textContent='';return}
+  const w=W[qi];target=[...w.jp[rnd(w.jp.length)]];input=[];
+  $('q-idx').textContent=qm==='seq'?`${qi+1} / ${N}`:qm==='rnd'?'🎲 무작위':qm==='long'?'🔊 장음 단어':'❌ 오답 복습';
+  $('q-ko').textContent=w.ko;$('fb').textContent='';
+  let c=[...target];const total=target.length<=4?8:12;
+  while(c.length<total)c.push(pool[rnd(pool.length)]);
+  for(let i=c.length-1;i>0;i--){const j=rnd(i+1);[c[i],c[j]]=[c[j],c[i]]}
+  $('grid').innerHTML=c.map((ch,i)=>`<button class="ch" data-c="${i}">${esc(ch)}</button>`).join('');
+  drawSlots();
+}
+function drawSlots(cls=''){
+  $('slots').innerHTML=target.map((_,i)=>`<div class="slot ${input[i]?'f':''} ${cls}" ${input[i]?`data-s="${i}"`:''}>${input[i]?esc(input[i].ch):''}</div>`).join('');
+}
+function pickChar(b){
+  if(locked||input.length>=target.length)return;
+  input.push({id:b.dataset.c,ch:b.textContent});b.disabled=true;drawSlots();
+  if(input.length===target.length)check();
+}
+function check(){
+  const ok=input.map(x=>x.ch).join('')===target.join('');locked=true;
+  $('fb').style.color=ok?'var(--ok)':'var(--err)';
+  if(ok){
+    drawSlots('good');$('fb').textContent='정답입니다! 🎉';say(target.join(''));
+    if(qm==='wrong'){wrong.delete(key(qi));save()}
+    setTimeout(()=>{if(qm==='seq')qi=(qi+1)%N;newQuiz()},1300);
+  }else{
+    drawSlots('bad');$('fb').textContent='틀렸어요. 오답 노트에 추가했어요';
+    wrong.add(key(qi));save();setTimeout(resetQ,1000);
+  }
+}
+function resetQ(){locked=false;input=[];$('fb').textContent='';drawSlots();document.querySelectorAll('.ch').forEach(b=>b.disabled=false)}
+function qStep(d){if(qm==='seq')qi=(qi+d+N)%N;newQuiz()}
+
+/* lists */
+function itemHTML(i,extra='',hlOn=false){
+  const w=W[i];
+  return `<div class="it"><div class="top"><div class="j">${hlOn?w.jp.map(hl).join(' / '):esc(w.jp.join(' / '))}<button class="say" data-say="${i}" aria-label="듣기">🔊</button></div>${extra}</div><div>${esc(w.ko)}</div><div class="r">[ ${esc(w.ro.join(' / '))} ]</div></div>`;
+}
+function showWrong(){
+  const l=[...wrong].map(k=>idxOf.get(k));
+  $('w-count').textContent=`틀린 단어 ${l.length}개`;
+  $('w-list').innerHTML=l.length?l.map(i=>itemHTML(i,`<button class="know" style="margin:0;padding:6px 10px" data-del="${i}">✓ 외움</button>`)).join(''):'<div class="empty">틀린 단어가 없어요. 완벽해요! 👏</div>';
+}
+function showDict(){
+  const f=$('search').value.trim().toLowerCase();
+  const l=W.map((w,i)=>i).filter(i=>{const w=W[i];return !f||w.ko.toLowerCase().includes(f)||w.jp.some(j=>j.includes(f))||w.ro.some(r=>r.includes(f))});
+  $('d-list').innerHTML=l.length?l.map(i=>itemHTML(i)).join(''):'<div class="empty">검색 결과가 없어요</div>';
+}
+
+/* gojuon (kana rows: "_" = empty) */
+const H=['あいうえお','かきくけこ','さしすせそ','たちつてと','なにぬねの','はひふへほ','まみむめも','や_ゆ_よ','らりるれろ','わ___を','ん____'];
+const K=['アイウエオ','カキクケコ','サシスセソ','タチツテト','ナニヌネノ','ハヒフヘホ','マミムメモ','ヤ_ユ_ヨ','ラリルレロ','ワ___ヲ','ン____'];
+const R=['아','카','사','타','나','하','마','야','라','와','응'];
+$('gt').innerHTML='<tr><th></th><th>a</th><th>i</th><th>u</th><th>e</th><th>o</th></tr>'+H.map((h,r)=>`<tr><th>${R[r]}행</th>${[...h].map((c,i)=>c==='_'?'<td></td>':`<td data-k="${c}"><b>${c}</b><i>${K[r][i]}</i></td>`).join('')}</tr>`).join('');
+
+/* events */
+document.addEventListener('click',e=>{
+  const t=e.target.closest('button,td,.fc,.slot');if(!t)return;
+  if(t.dataset.t)return tab(t.dataset.t);
+  if(t.dataset.m){cm=t.dataset.m;document.querySelectorAll('[data-m]').forEach(b=>b.classList.toggle('on',b===t));ci=cm==='rev'?revPick():0;return showCard()}
+  if(t.dataset.q){qm=t.dataset.q;document.querySelectorAll('[data-q]').forEach(b=>b.classList.toggle('on',b===t));qi=0;return newQuiz()}
+  if(t.dataset.c!==undefined)return pickChar(t);
+  if(t.dataset.s!==undefined&&!locked){const r=input.splice(+t.dataset.s,1)[0];const b=document.querySelector(`[data-c="${r.id}"]`);if(b)b.disabled=false;$('fb').textContent='';return drawSlots()}
+  if(t.dataset.say!==undefined)return say(W[+t.dataset.say].jp[0]);
+  if(t.dataset.k)return say(t.dataset.k);
+  if(t.dataset.del!==undefined){wrong.delete(key(+t.dataset.del));save();return showWrong()}
+  if(t.dataset.mc){mm=t.dataset.mc;document.querySelectorAll('[data-mc]').forEach(b=>b.classList.toggle('on',b===t));return newMC()}
+  if(t.dataset.o!==undefined)return pickMC(t);
+  if(t.id==='fc')return t.classList.toggle('flip');
+});
+$('next').onclick=()=>step(1);$('prev').onclick=()=>step(-1);
+$('fc-say').onclick=()=>say(W[ci].jp[0]);
+$('fc-know').onclick=()=>{const k=key(ci);known.has(k)?known.delete(k):known.add(k);save();showCard()};
+$('q-prev').onclick=()=>qStep(-1);$('q-skip').onclick=()=>qStep(1);$('q-reset').onclick=resetQ;
+$('q-hint').onclick=()=>{$('fb').style.color='var(--sub)';$('fb').textContent='정답: '+target.join('')};
+$('w-clear').onclick=()=>{if(confirm('오답 노트를 모두 비울까요?')){wrong.clear();save();showWrong()}};
+$('search').oninput=showDict;
+$('long-quiz').onclick=()=>{qm='long';document.querySelectorAll('[data-q]').forEach(b=>b.classList.toggle('on',b.dataset.q==='long'));tab('quiz')};
+if('serviceWorker' in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
+progress();tab('card');
+</script>
+</body>
+</html>
